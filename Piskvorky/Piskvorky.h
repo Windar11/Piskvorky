@@ -9,6 +9,23 @@
 #define UPPER_RIGHT_CORNER  191 // ┐ 
 #define LOWER_LEFT_CORNER   192 // └ 
 #define LOWER_RIGHT_CORNER  217 // ┘ 
+
+#define SS2	P[x - 1][y] == P[x    ][y] && P[x    ][y] == P[x + 1][y]
+#define SL  P[x - 2][y] == P[x - 1][y] && P[x - 1][y] == P[x    ][y]
+#define SP  P[x    ][y] == P[x + 1][y] && P[x + 1][y] == P[x + 2][y]
+
+#define SS1 P[x][y+1] == P[x][y    ] && P[x][y    ] == P[x][y-1]
+#define SD  P[x][y+2] == P[x][y + 1] && P[x][y + 1] == P[x][y  ]
+#define	SH  P[x][y-2] == P[x][y - 1] && P[x][y - 1] == P[x][y  ]
+
+#define HS  P[x - 1][y - 1] == P[x    ][y    ] && P[x    ][y    ] == P[x + 1][y + 1]
+#define HH  P[x - 2][y - 2] == P[x - 1][y - 1] && P[x - 1][y - 1] == P[x    ][y    ]
+#define HD  P[x    ][y    ] == P[x + 1][y + 1] && P[x + 1][y + 1] == P[x + 2][y + 2]
+
+#define VS  P[x - 1][y + 1] == P[x    ][y    ] && P[x    ][y    ] == P[x + 1][y - 1]
+#define VD  P[x - 2][y + 2] == P[x - 1][y + 1] && P[x - 1][y + 1] == P[x    ][y    ]
+#define VH  P[x    ][y    ] == P[x + 1][y - 1] && P[x + 1][y - 1] == P[x + 2][y - 2]
+
 #include <iostream>
 
 // TODO: Reference additional headers your program requires here.

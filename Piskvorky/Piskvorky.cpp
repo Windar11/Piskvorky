@@ -5,8 +5,10 @@
 #include <iostream>
 #include <math.h>
 #include <time.h>
-
+int vyhra;
 using namespace std;
+
+bool winCheck(int** P, int x, int y, int velkostX, int velkostY);
 
 void vyberMena(char *player1, char *player2)
 {
@@ -30,13 +32,13 @@ void vyberMena(char *player1, char *player2)
 		{
 			system("cls");
 			printf("Zadajte meno hraca 1 : \n");
-			scanf_s("%s", &player1, PLAYER_NAME_SIZE);
-			fprintf_s(subor, "%s\n", &player1);
+			scanf_s("%s", player1, PLAYER_NAME_SIZE);
+			fprintf_s(subor, "%s\n", player1);
 			while ((c = getchar()) != '\n' && c != EOF) {}
 			
 			printf("\nZadajte meno hraca 2 : \n");
-			scanf_s("%s", &player2, PLAYER_NAME_SIZE);
-			fprintf_s(subor, "%s\n", &player2);
+			scanf_s("%s", player2, PLAYER_NAME_SIZE);
+			fprintf_s(subor, "%s\n", player2);
 			while ((c = getchar()) != '\n' && c != EOF) {}
 			
 			fclose(subor);
@@ -53,8 +55,7 @@ void vyberMena(char *player1, char *player2)
 		}
 		else
 		{
-			
-			
+						
 			fseek(subor, 0, SEEK_END);
 			if (ftell(subor) == 0)
 			{
@@ -88,7 +89,7 @@ void vyberVelkosti(int *velkostX,int *velkostY)
 	do
 	{
 		system("cls");
-		printf("Prosím zadajte velkost hracieho pola (min 3x3)\n");
+		printf("Prosim zadajte velkost hracieho pola (min 3x3)\n");
 		scanf_s("%dx%d", velkostX, velkostY);
 		while (getchar() != '\n');
 	} while (*velkostX < 3 && *velkostY < 3);
@@ -114,14 +115,7 @@ void vypisNastaveni(char *player1, char *player2, int *velkostX, int *velkostY, 
 	while ((c = getchar()) != '\n' && c != EOF) {}
 
 }
-/*
-void drawSquare()
-{
-	printf("%c%c%c%c%c", UPPER_LEFT_CORNER, HORIZ, HORIZ, HORIZ, UPPER_RIGHT_CORNER);
-	printf("%c%c%c%c%c", VERT, ' ', ' ', ' ', VERT);
-	printf("%c%c%c%c%c", LOWER_LEFT_CORNER, HORIZ, HORIZ, HORIZ, LOWER_RIGHT_CORNER);
-}
-*/
+
 void vykreslenieDosky(int** hraciaDoska,int velkostX,int velkostY)
 {
 	system("cls");
@@ -146,7 +140,7 @@ void vykreslenieDosky(int** hraciaDoska,int velkostX,int velkostY)
 
 				for (int j = 0; j < velkostX; j++)
 				{
-					if (hraciaDoska[j][k] != -1)
+					if (hraciaDoska[j][k] != INT_MIN)
 					{
 
 						printf(" %c%c%d%c%c ", VERT, ' ', hraciaDoska[j][k], ' ', VERT);
@@ -180,7 +174,7 @@ void vykreslenieDosky(int** hraciaDoska,int velkostX,int velkostY)
 }
 
 
-void urobTah(int** hraciaDoska , bool *startPlayer, char* player1, char* player2)
+void urobTah(int** hraciaDoska , bool *startPlayer, char* player1, char* player2, int velkostX, int velkostY)
 {
 	int zadaneX = 0;
 	int zadaneY = 0;
@@ -188,22 +182,44 @@ void urobTah(int** hraciaDoska , bool *startPlayer, char* player1, char* player2
 	if (*startPlayer == 0)
 	{
 		printf("Na tahu je hrac: %s\n", player1);
-		printf("Zadaj súradnice [ X,Y ]\n");
-		scanf_s("%d,%d", &zadaneX, &zadaneY);
+		do {
+			printf("Zadajte suradnice [ X,Y ]\n");
+			scanf_s("%d,%d", &zadaneX, &zadaneY);
+			while ((c = getchar()) != '\n' && c != EOF) {}
 
-		while ((c = getchar()) != '\n' && c != EOF) {}
+		} while (zadaneX < 1 || zadaneX > velkostX || zadaneY < 1 || zadaneY > velkostY || hraciaDoska[zadaneX-1][zadaneY-1] == 0 || hraciaDoska[zadaneX - 1][zadaneY - 1] == 1);
+
 		hraciaDoska[zadaneX - 1][zadaneY - 1] = 0;
+		if (winCheck(hraciaDoska, zadaneX, zadaneY, velkostX, velkostY) == true)
+		{
+
+			printf("\n\n\n!!!\tVYHRAL %s\t!!!\n\n\n", player1);
+			vyhra = 1;
+		}
+
 	}
 	else if (*startPlayer == 1)
 	{
 		printf("Na tahu je hrac: %s\n", player2);
-		printf("Zadaj súradnice [ X,Y ]\n");
-		scanf_s("%d,%d", &zadaneX, &zadaneY);
+		do
+		{
+			printf("Zadajte suradnice [ X,Y ]\n");
+			scanf_s("%d,%d", &zadaneX, &zadaneY);
+			while ((c = getchar()) != '\n' && c != EOF) {}
 
-		while ((c = getchar()) != '\n' && c != EOF) {}
+		} while (zadaneX < 1 || zadaneX > velkostX + 1 || zadaneY < 1 || zadaneY > velkostY + 1 || hraciaDoska[zadaneX - 1][zadaneY - 1] == 0 || hraciaDoska[zadaneX - 1][zadaneY - 1] == 1);
+		
 		hraciaDoska[zadaneX - 1][zadaneY - 1] = 1;
+
+		if (winCheck(hraciaDoska, zadaneX, zadaneY, velkostX, velkostY) == true)
+		{
+			
+			printf("\n\n\n!!!\tVYHRAL %s\t!!!\n\n\n", player2);
+			vyhra = 1;
+		}
 	}
 	*startPlayer = !(*startPlayer);
+	
 }
 
 
@@ -248,7 +264,7 @@ int main()
 			{
 				for (int j = 0; j < velkostY; j++)
 				{
-					hraciaDoska[i][j] = -1;
+					hraciaDoska[i][j] = INT_MIN;
 				}
 			}
 
@@ -268,9 +284,10 @@ int main()
 			do
 			{
 				vykreslenieDosky(hraciaDoska, velkostX, velkostY);
-				urobTah(hraciaDoska, &startPlayer, player1, player2);
-
-			} while (1);
+				urobTah(hraciaDoska, &startPlayer, player1, player2, velkostX, velkostY);
+				
+				
+			} while (vyhra != 1);
 
 
 			while ((c = getchar()) != '\n' && c != EOF) {}
@@ -288,4 +305,18 @@ int main()
 	}
 	//free(hraciaDoska);
 	return 0;
+}
+
+
+bool winCheck(int** P, int xx, int yy,int velkostX, int velkostY)
+{
+	int x = xx - 1;
+	int y = yy - 1;
+	if (SS2 ||	SL ||	SP ||	SS1 ||	SD ||	SH ||	HS ||	HH ||	HD ||	VS ||	VD ||	VH )
+	{
+		return true;
+	}
+	
+
+
 }
