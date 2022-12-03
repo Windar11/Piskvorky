@@ -4,6 +4,7 @@
 #include "Piskvorky.h"
 #include <iostream>
 #include <math.h>
+#include <time.h>
 
 #define PLAYER_NAME_SIZE 20
 
@@ -16,7 +17,10 @@ void vyberMena(char *player1, char *player2)
 	char znak;
 	printf("Chcete vytvorit nove mena? a[ANO] / n[NIE]\n");
 	nove = tolower(getchar());
-	while (getchar() != '\n');
+	
+	int c;
+	while ((c = getchar()) != '\n' && c != EOF) {}
+
 	switch (nove)
 	{
 	case 'a':
@@ -29,12 +33,14 @@ void vyberMena(char *player1, char *player2)
 			system("cls");
 			printf("Zadajte meno hraca 1 : \n");
 			scanf_s("%s", &player1, PLAYER_NAME_SIZE);
-			while (getchar() != '\n');
-			fprintf(subor, "%s\n", &player1);
+			fprintf_s(subor, "%s\n", &player1);
+			while ((c = getchar()) != '\n' && c != EOF) {}
+			
 			printf("\nZadajte meno hraca 2 : \n");
 			scanf_s("%s", &player2, PLAYER_NAME_SIZE);
-			while (getchar() != '\n');
-			fprintf(subor, "%s\n", &player2);
+			fprintf_s(subor, "%s\n", &player2);
+			while ((c = getchar()) != '\n' && c != EOF) {}
+			
 			fclose(subor);
 			break;
 		}
@@ -48,7 +54,7 @@ void vyberMena(char *player1, char *player2)
 		else
 		{
 			
-			//printf("good");
+			
 			fseek(subor, 0, SEEK_END);
 			if (ftell(subor) == 0)
 			{
@@ -59,12 +65,11 @@ void vyberMena(char *player1, char *player2)
 				vyberMena(player1, player2);
 			}
 			fseek(subor, 0, SEEK_SET);
-			fscanf_s(subor, "%s", &player1, PLAYER_NAME_SIZE);
-			fscanf_s(subor, "%s", &player2, PLAYER_NAME_SIZE);
-			printf("\n%s\n", &player1);
-			printf("%s\n", &player2);
-		
-
+			fscanf_s(subor, "%s", player1, PLAYER_NAME_SIZE);
+			fscanf_s(subor, "%s", player2, PLAYER_NAME_SIZE);
+			
+			
+			fclose(subor);
 		}
 		break;
 	default:
@@ -77,14 +82,90 @@ void vyberMena(char *player1, char *player2)
 	
 }
 
-int main()
+void vyberVelkosti(int *velkostX,int *velkostY)
 {
 	
-	char *player1[PLAYER_NAME_SIZE];
-	char *player2[PLAYER_NAME_SIZE];
+	do
+	{
+		system("cls");
+		printf("Prosím zadajte velkost hracieho pola (min 3x3)\n");
+		scanf_s("%dx%d", velkostX, velkostY);
+		while (getchar() != '\n');
+	} while (*velkostX < 3 && *velkostY < 3);
+	
+}
 
-	vyberMena(*player1,*player2);
-	//printf("\n%s\n", *player1, PLAYER_NAME_SIZE);
-	//printf("%s\n", *player2, PLAYER_NAME_SIZE);
+void pickFirst(bool *startPlayer)
+{
+	srand(time(NULL));
+	*startPlayer = rand() % 2;
+}
+
+void vypisNastaveni(char *player1, char *player2, int *velkostX, int *velkostY, bool *startPlayer)
+{
+	system("cls");
+	printf("Meno hraca 1: %s\n", player1);
+	printf("Meno hraca 2: %s\n", player2);
+	printf("Velkost hracieho pola: %dx%d \n", *velkostX, *velkostY);
+	printf("Zacina hrac1/hrac2  [0/1] :  %d\n", *startPlayer);
+
+	int c;
+	while ((c = getchar()) != '\n' && c != EOF) {}
+
+}
+
+int main()
+{
+	int velkostX;
+	int velkostY;
+	char player1[PLAYER_NAME_SIZE];
+	char player2[PLAYER_NAME_SIZE];
+	char opt;
+	bool startPlayer;
+	do
+	{
+		
+		system("cls");		
+		printf("N: Nastavenia hry   ");
+		printf("Z: Zobrazit aktualne nastavenia   ");
+		printf("S: Start hry     ");
+		printf("L: Leaderboard     ");
+		printf("Q: Ukoncit hru\n\n");
+
+		opt = tolower(getchar());
+		int c;
+		while ((c = getchar()) != '\n' && c != EOF) {}
+
+		switch (opt)
+		{
+		case 'n':
+			vyberMena(player1, player2);
+			vyberVelkosti(&velkostX, &velkostY);
+			pickFirst(&startPlayer);
+			
+			break;
+		case 'z':
+			
+			system("cls");
+			printf("Meno hraca 1: %s\n", &player1);
+			printf("Meno hraca 2: %s\n", &player2);
+			printf("Velkost hracieho pola: %dx%d \n", velkostX, velkostY);
+			printf("Zacina hrac1/hrac2  [0/1] :  %d\n", startPlayer);
+			int c;
+			while ((c = getchar()) != '\n' && c != EOF) {}
+			break;
+
+		case 's':
+				
+
+			break;
+
+		case 'l':
+
+			break;
+		}
+	} while (opt != 'q'); 
+
+
 	return 0;
 }
