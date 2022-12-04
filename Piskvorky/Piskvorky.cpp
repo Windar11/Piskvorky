@@ -76,7 +76,7 @@ void vyberMena(char *player1, char *player2)
 	default:
 		printf("!!!Vozeny nespravny znak.!!!\n");
 		printf("Prosim zadajte znova.\n\n");
-		vyberMena(player1, player1);
+		vyberMena(player1, player2);
 		break;
 	}
 	
@@ -119,17 +119,23 @@ void vypisNastaveni(char *player1, char *player2, int *velkostX, int *velkostY, 
 void vykreslenieDosky(int** hraciaDoska,int velkostX,int velkostY)
 {
 	system("cls");
-	for (int k = 0; k < velkostY; k++)
+	for (int l = 1; l < (velkostX + 1); l++)
 	{
+		printf("  %c%c%d%c%c ", ' ', ' ', l, ' ', ' ');
+	}printf("\n");
+	for (int k = 2; k < (velkostY+2); k++)
+	{
+		//printf("%d", k - 1);
 		for (int i = 0; i < 3; i++)
 		{
 			switch (i)
 			{
 			case 0:
 			{
-				for (int j = 0; j < velkostX; j++)
+				
+				for (int j = 2; j < (velkostX+2); j++)
 				{
-					printf(" %c%c%c%c%c ", UPPER_LEFT_CORNER, HORIZ, HORIZ, HORIZ, UPPER_RIGHT_CORNER);
+					printf("  %c%c%c%c%c ", UPPER_LEFT_CORNER, HORIZ, HORIZ, HORIZ, UPPER_RIGHT_CORNER);
 				}
 				printf("\n");
 				break;
@@ -137,16 +143,22 @@ void vykreslenieDosky(int** hraciaDoska,int velkostX,int velkostY)
 
 			case 1:
 			{
-
-				for (int j = 0; j < velkostX; j++)
+				
+				for (int j = 2; j < (velkostX+2); j++)
 				{
 					if (hraciaDoska[j][k] != INT_MIN)
 					{
-
-						printf(" %c%c%d%c%c ", VERT, ' ', hraciaDoska[j][k], ' ', VERT);
+						if (j == 2)
+							printf("%d%c%c%c%d%c%c ", k - 1, ' ', VERT, ' ', hraciaDoska[j][k], ' ', VERT);
+						else
+							printf(" %c%c%c%d%c%c ", ' ', VERT, ' ', hraciaDoska[j][k], ' ', VERT);
+							
 					}
 					else
-					printf(" %c%c%c%c%c ", VERT, ' ', ' ', ' ', VERT);
+						if(j==2)
+							printf("%d%c%c%c%c%c%c ",k-1, ' ', VERT, ' ', ' ', ' ', VERT);
+						else
+							printf(" %c%c%c%c%c%c ",  ' ', VERT, ' ', ' ', ' ', VERT);
 				}
 				printf("\n");
 				break;
@@ -154,9 +166,10 @@ void vykreslenieDosky(int** hraciaDoska,int velkostX,int velkostY)
 
 			case 2:
 			{
-				for (int j = 0; j < velkostX; j++)
+				
+				for (int j = 2; j < (velkostX+2); j++)
 				{
-					printf(" %c%c%c%c%c ", LOWER_LEFT_CORNER, HORIZ, HORIZ, HORIZ, LOWER_RIGHT_CORNER);
+					printf("  %c%c%c%c%c ", LOWER_LEFT_CORNER, HORIZ, HORIZ, HORIZ, LOWER_RIGHT_CORNER);
 				}
 				printf("\n");
 				break;
@@ -176,9 +189,9 @@ void vykreslenieDosky(int** hraciaDoska,int velkostX,int velkostY)
 
 void urobTah(int** hraciaDoska , bool *startPlayer, char* player1, char* player2, int velkostX, int velkostY)
 {
-	int zadaneX = 0;
-	int zadaneY = 0;
-	int c = 0;
+	int zadaneX = 2;
+	int zadaneY = 2;
+	int c = 2;
 	if (*startPlayer == 0)
 	{
 		printf("Na tahu je hrac: %s\n", player1);
@@ -187,17 +200,19 @@ void urobTah(int** hraciaDoska , bool *startPlayer, char* player1, char* player2
 			scanf_s("%d,%d", &zadaneX, &zadaneY);
 			while ((c = getchar()) != '\n' && c != EOF) {}
 
-		} while (zadaneX < 1 || zadaneX > velkostX || zadaneY < 1 || zadaneY > velkostY || hraciaDoska[zadaneX-1][zadaneY-1] == 0 || hraciaDoska[zadaneX - 1][zadaneY - 1] == 1);
+		} while (zadaneX < 1 || zadaneX > velkostX || zadaneY < 1 || zadaneY > velkostY || hraciaDoska[zadaneX + 1][zadaneY + 1 ] == 0 || hraciaDoska[zadaneX + 1][zadaneY + 1] == 1);
 
-		hraciaDoska[zadaneX - 1][zadaneY - 1] = 0;
+		hraciaDoska[zadaneX + 1][zadaneY + 1] = 0;
 		if (winCheck(hraciaDoska, zadaneX, zadaneY, velkostX, velkostY) == true)
 		{
 
+			system("cls");
+			vykreslenieDosky(hraciaDoska, velkostX, velkostY);
 			printf("\n\n\n!!!\tVYHRAL %s\t!!!\n\n\n", player1);
 			vyhra = 1;
 		}
 
-	}
+	}///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	else if (*startPlayer == 1)
 	{
 		printf("Na tahu je hrac: %s\n", player2);
@@ -207,13 +222,14 @@ void urobTah(int** hraciaDoska , bool *startPlayer, char* player1, char* player2
 			scanf_s("%d,%d", &zadaneX, &zadaneY);
 			while ((c = getchar()) != '\n' && c != EOF) {}
 
-		} while (zadaneX < 1 || zadaneX > velkostX + 1 || zadaneY < 1 || zadaneY > velkostY + 1 || hraciaDoska[zadaneX - 1][zadaneY - 1] == 0 || hraciaDoska[zadaneX - 1][zadaneY - 1] == 1);
+		} while (zadaneX < 1 || zadaneX > velkostX || zadaneY < 1 || zadaneY > velkostY || hraciaDoska[zadaneX + 1][zadaneY + 1] == 0 || hraciaDoska[zadaneX + 1][zadaneY + 1] == 1);
 		
-		hraciaDoska[zadaneX - 1][zadaneY - 1] = 1;
+		hraciaDoska[zadaneX + 1][zadaneY + 1] = 1;
 
 		if (winCheck(hraciaDoska, zadaneX, zadaneY, velkostX, velkostY) == true)
 		{
-			
+			system("cls");
+			vykreslenieDosky(hraciaDoska, velkostX, velkostY);
 			printf("\n\n\n!!!\tVYHRAL %s\t!!!\n\n\n", player2);
 			vyhra = 1;
 		}
@@ -226,13 +242,15 @@ void urobTah(int** hraciaDoska , bool *startPlayer, char* player1, char* player2
 
 int main()
 {
-	int velkostX;
-	int velkostY;
+	int velkostX=3;
+	int velkostY=3;
 	char player1[PLAYER_NAME_SIZE];
 	char player2[PLAYER_NAME_SIZE];
 	char opt;
-	bool startPlayer;
+	bool startPlayer=0;
 	int** hraciaDoska = NULL;
+	int rozmerX;
+	int rozmerY;
 	do
 	{
 		
@@ -253,39 +271,66 @@ int main()
 			vyberMena(player1, player2);
 			vyberVelkosti(&velkostX, &velkostY);
 			pickFirst(&startPlayer);
+			rozmerX = velkostX + 4;
+			rozmerY = velkostY + 4;
+			
 
-			hraciaDoska = (int**)malloc(velkostX * sizeof(int));
-			for (int i = 0; i < velkostX; i++)
+			break;
+		case 'z':
+			FILE * subor;
+			if (fopen_s(&subor, "menahracov.txt", "r") != 0)
 			{
-				hraciaDoska[i] = (int*)malloc(velkostY * sizeof(int));
+				printf("\nProsim najprv vyplnte nastavenia!\n");
+				break;
+
+			}
+			else {
+
+				fseek(subor, 0, SEEK_END);
+				if (ftell(subor) == 0)
+				{
+					system("cls");
+					printf("\n\n!!Mena z predoslej hry nie su dostupne!!\n");
+					printf("Prosim vyplnete najprv nastavenia.\n\n");
+					fclose(subor);
+					break;
+				}
+				fseek(subor, 0, SEEK_SET);
+				fscanf_s(subor, "%s", player1, PLAYER_NAME_SIZE);
+				fscanf_s(subor, "%s", player2, PLAYER_NAME_SIZE);
+
+				system("cls");
+				printf("Meno hraca 1: %s\n", &player1);
+				printf("Meno hraca 2: %s\n", &player2);
+				printf("Velkost hracieho pola: %dx%d \n", velkostX, velkostY);
+				printf("Zacina hrac1/hrac2  [0/1] :  %d\n", startPlayer);
+				int c;
+				while ((c = getchar()) != '\n' && c != EOF) {}
+				fclose(subor);
+				break;
+			}
+			
+
+		case 's':
+
+			hraciaDoska = (int**)malloc((velkostX+4) * sizeof(int));
+			for (int i = 0; i < (velkostX + 4); i++)
+			{
+				hraciaDoska[i] = (int*)malloc((velkostY+4) * sizeof(int));
 			}
 
-			for (int i = 0; i < velkostY; i++)
+			for (int i = 0; i < (velkostY + 4); i++)
 			{
-				for (int j = 0; j < velkostY; j++)
+				for (int j = 0; j < (velkostY + 4); j++)
 				{
 					hraciaDoska[i][j] = INT_MIN;
 				}
 			}
 
-			break;
-		case 'z':
-			
-			system("cls");
-			printf("Meno hraca 1: %s\n", &player1);
-			printf("Meno hraca 2: %s\n", &player2);
-			printf("Velkost hracieho pola: %dx%d \n", velkostX, velkostY);
-			printf("Zacina hrac1/hrac2  [0/1] :  %d\n", startPlayer);
-			int c;
-			while ((c = getchar()) != '\n' && c != EOF) {}
-			break;
-
-		case 's':
 			do
 			{
 				vykreslenieDosky(hraciaDoska, velkostX, velkostY);
 				urobTah(hraciaDoska, &startPlayer, player1, player2, velkostX, velkostY);
-				
 				
 			} while (vyhra != 1);
 
@@ -299,7 +344,7 @@ int main()
 		}
 	} while (opt != 'q'); 
 
-	for (int i = 0; i < velkostX; i++)
+	for (int i = 0; i < (velkostX+4); i++)
 	{
 		free(hraciaDoska[i]);
 	}
@@ -310,13 +355,14 @@ int main()
 
 bool winCheck(int** P, int xx, int yy,int velkostX, int velkostY)
 {
-	int x = xx - 1;
-	int y = yy - 1;
+	int x = xx + 1;
+	int y = yy + 1;
+	
 	if (SS2 ||	SL ||	SP ||	SS1 ||	SD ||	SH ||	HS ||	HH ||	HD ||	VS ||	VD ||	VH )
 	{
 		return true;
 	}
+	else
+		return false;
 	
-
-
 }
