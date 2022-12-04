@@ -146,7 +146,7 @@ void vykreslenieDosky(int** hraciaDoska,int velkostX,int velkostY)
 				
 				for (int j = 2; j < (velkostX+2); j++)
 				{
-					if (hraciaDoska[j][k] != INT_MIN)
+					if (hraciaDoska[j][k] != -2)
 					{
 						if (j == 2)
 							printf("%d%c%c%c%d%c%c ", k - 1, ' ', VERT, ' ', hraciaDoska[j][k], ' ', VERT);
@@ -295,35 +295,38 @@ int main()
 					fclose(subor);
 					break;
 				}
-				fseek(subor, 0, SEEK_SET);
-				fscanf_s(subor, "%s", player1, PLAYER_NAME_SIZE);
-				fscanf_s(subor, "%s", player2, PLAYER_NAME_SIZE);
+				else
+				{
+					fseek(subor, 0, SEEK_SET);
+					fscanf_s(subor, "%s", player1, PLAYER_NAME_SIZE);
+					fscanf_s(subor, "%s", player2, PLAYER_NAME_SIZE);
 
-				system("cls");
-				printf("Meno hraca 1: %s\n", &player1);
-				printf("Meno hraca 2: %s\n", &player2);
-				printf("Velkost hracieho pola: %dx%d \n", velkostX, velkostY);
-				printf("Zacina hrac1/hrac2  [0/1] :  %d\n", startPlayer);
-				int c;
-				while ((c = getchar()) != '\n' && c != EOF) {}
-				fclose(subor);
-				break;
+					system("cls");
+					printf("Meno hraca 1: %s\n", &player1);
+					printf("Meno hraca 2: %s\n", &player2);
+					printf("Velkost hracieho pola: %dx%d \n", velkostX, velkostY);
+					printf("Zacina hrac1/hrac2  [0/1] :  %d\n", startPlayer);
+					int c;
+					while ((c = getchar()) != '\n' && c != EOF) {}
+					fclose(subor);
+					break;
+				}
 			}
 			
 
 		case 's':
 
-			hraciaDoska = (int**)malloc((velkostX+4) * sizeof(int));
+			hraciaDoska = (int**)calloc((rozmerX),sizeof(int));
 			for (int i = 0; i < (velkostX + 4); i++)
 			{
-				hraciaDoska[i] = (int*)malloc((velkostY+4) * sizeof(int));
+				hraciaDoska[i] = (int*)calloc((rozmerY), sizeof(int));
 			}
 
 			for (int i = 0; i < (velkostY + 4); i++)
 			{
-				for (int j = 0; j < (velkostY + 4); j++)
+				for (int j = 0; j < (velkostX + 4); j++)
 				{
-					hraciaDoska[i][j] = INT_MIN;
+					hraciaDoska[j][i] = -2;
 				}
 			}
 
