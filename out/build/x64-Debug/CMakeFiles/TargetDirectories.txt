@@ -1,0 +1,5 @@
+C:/Users/peter/Documents/Škola/VUT_FEKT/PC1T/Piskvorky/out/build/x64-Debug/CMakeFiles/edit_cache.dir
+C:/Users/peter/Documents/Škola/VUT_FEKT/PC1T/Piskvorky/out/build/x64-Debug/CMakeFiles/rebuild_cache.dir
+C:/Users/peter/Documents/Škola/VUT_FEKT/PC1T/Piskvorky/out/build/x64-Debug/Piskvorky/CMakeFiles/Piskvorky.dir
+C:/Users/peter/Documents/Škola/VUT_FEKT/PC1T/Piskvorky/out/build/x64-Debug/Piskvorky/CMakeFiles/edit_cache.dir
+C:/Users/peter/Documents/Škola/VUT_FEKT/PC1T/Piskvorky/out/build/x64-Debug/Piskvorky/CMakeFiles/rebuild_cache.dir
