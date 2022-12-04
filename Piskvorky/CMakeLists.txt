@@ -4,6 +4,6 @@
 cmake_minimum_required (VERSION 3.8)
 
 # Add source to this project's executable.
-add_executable (Piskvorky "Piskvorky.cpp" "Piskvorky.h")
+add_executable (Piskvorky "Piskvorky.cpp" "Piskvorky.h" "Leaderboard.cpp" "Lederboard.h")
 
 # TODO: Add tests and install targets if needed.
