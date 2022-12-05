@@ -9,122 +9,7 @@
 int vyhra;
 using namespace std;
 
-typedef struct
-{
-	int obsadene;
-	char meno[NAME_SIZE];
-	int pocetVyhier;
-}leader;
 
-void addToBoard(leader* LeaderBoard,char* meno)
-{
-	FILE* board = NULL;
-	fopen_s(&board, "leaderboard.txt", "r");
-	if (board != NULL)
-	{
-		printf("errror");
-	}
-	else
-	{
-		int poz=27;
-		bool found = false;
-		for (int i = 0; i < 10; i++)
-		{
-			if (board != 0)
-			{
-				fscanf_s(board, "%d\n", &LeaderBoard[i].obsadene);
-				fscanf_s(board, "%s\n", LeaderBoard[i].meno, 20);
-				fscanf_s(board, "%d\n", &LeaderBoard[i].pocetVyhier);
-
-				if (LeaderBoard[i].meno == meno)
-				{
-					found = true;
-					LeaderBoard[i].pocetVyhier = LeaderBoard[i].pocetVyhier + 1;
-					break;
-				}
-			}
-		}
-		fclose(board);
-		
-
-
-		if (found == false)
-		{
-			for (int i = 0; i < 10; i ++ )
-			{
-				if (LeaderBoard[(i)].obsadene == 0 )
-				{
-					poz = i;
-					break;
-				}
-			}
-			LeaderBoard[poz].obsadene = 1;
-			strcpy_s(LeaderBoard[poz].meno, meno);
-			LeaderBoard[poz].pocetVyhier =  1;
-		}
-		
-
-
-		if (fopen_s(&board, "leaderboard.txt", "w") != 0)
-		{
-			printf("errror");
-		}
-		else
-		{
-			for (int i = 0; i < poz; i++)
-			{
-				fprintf(board, "%d\n", LeaderBoard[i].obsadene);
-				fprintf(board,"%s\n", LeaderBoard[i].meno);
-				fprintf(board, "%d\n", LeaderBoard[i].pocetVyhier);
-								
-			}
-			for (int i = (poz+1); i < 10; i++)
-			{
-				fprintf(board, "0\n");
-				fprintf(board, " \n");
-				fprintf(board, " \n");
-
-			}
-			
-		}
-		fclose(board);
-
-	}
-}
-
-void ShowBoard(leader LeaderBoard[10])
-{
-	int poz = 0;
-	FILE* board;
-	fopen_s(&board, "leaderboard.txt", "r");
-	for (int j = 0; j < 10; j++)
-	{
-		fscanf_s(board, "%d\n", &LeaderBoard[j].obsadene);
-		fscanf_s(board, "%s\n", LeaderBoard[j].meno, 20);
-		fscanf_s(board, "%d\n", &LeaderBoard[j].pocetVyhier);
-
-	}
-	fclose(board);
-
-	printf("\n\n");
-
-	for (int i = 0; i < 10; i++)
-	{
-		if (LeaderBoard[(i)].obsadene == 0)
-		{
-			poz = i;
-			break;
-		}
-		
-	}
-	for (int i = 0; i < poz; i++)
-	{
-		//printf("%d\n", LeaderBoard[i].obsadene);
-		printf("Player: %s, Pocet vyhier: %d\n", LeaderBoard[i].meno, LeaderBoard[i].pocetVyhier);
-	}
-	int c;
-	while ((c = getchar()) != '\n' && c != EOF) {}
-}
 
 
 bool winCheck(int** P, int x, int y, int velkostX, int velkostY);
@@ -239,17 +124,17 @@ void vykreslenieDosky(int** hraciaDoska,int velkostX,int velkostY)
 {	
 
 	system("cls");
-	
-	for (int z = 0; z < velkostX; z++)
+	int z = 0;
+	for (; z < velkostX; z++)
 	{
 		printf("  %c%c%d%c%c ",' ',' ', (z+1),' ',' ');
 	}
 	printf("\n");
-	
+	int i;
 	for (int k = 2; k < (velkostY+2); k++)
 	{
 		//printf("%d", k - 1);
-		for (int i = 0; i < 3; i++)
+		for (i = 0; i < 3; i++)
 		{
 			switch (i)
 			{

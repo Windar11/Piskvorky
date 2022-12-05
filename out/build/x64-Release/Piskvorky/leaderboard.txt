@@ -1,24 +1,24 @@
 1
 Andrej
-10
+20
 1
 Maros
-8
+17
 1
 Matej
-7
-1
-Tomas
-6
-1
-Tadeas
-5
+14
 1
 Marek
-5
+10
+1
+Tadeas
+7
 1
 Simon
-3
+5
+0
+ 
+ 
 0
  
  

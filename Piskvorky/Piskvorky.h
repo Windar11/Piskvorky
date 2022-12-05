@@ -25,7 +25,7 @@
 #define VS  P[x - 1][y + 1] == P[x    ][y    ] && P[x    ][y    ] == P[x + 1][y - 1]
 #define VD  P[x - 2][y + 2] == P[x - 1][y + 1] && P[x - 1][y + 1] == P[x    ][y    ]
 #define VH  P[x    ][y    ] == P[x + 1][y - 1] && P[x + 1][y - 1] == P[x + 2][y - 2]
-
+//static int vyhra;
 #include <iostream>
 
 // TODO: Reference additional headers your program requires here.

@@ -1,13 +1,16 @@
 #pragma once
 #define NAME_SIZE 20
 #include <iostream>
-/*
-struct aleader
+
+typedef struct
 {
+	int obsadene;
 	char meno[NAME_SIZE];
 	int pocetVyhier;
-	struct leader* dalsi;
-};
+}leader;
 
-void add(char* meno, int pocetVyhier, struct leader** uk_prvy);
-*/
+
+void addToBoard(leader* LeaderBoard, char* meno);
+
+
+void ShowBoard(leader LeaderBoard[10]);
