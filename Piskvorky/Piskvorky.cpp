@@ -11,50 +11,56 @@ using namespace std;
 
 typedef struct
 {
+	int obsadene;
 	char meno[NAME_SIZE];
 	int pocetVyhier;
 }leader;
 
 void addToBoard(leader* LeaderBoard,char* meno)
 {
-	FILE* board;
-	
-	if (fopen_s(&board, "leaderboard.txt", "r") != 0)
+	FILE* board = NULL;
+	fopen_s(&board, "leaderboard.txt", "r");
+	if (board != NULL)
 	{
 		printf("errror");
 	}
 	else
 	{
-		int poz=9;
+		int poz=27;
 		bool found = false;
 		for (int i = 0; i < 10; i++)
 		{
-			fscanf_s(board, "%s\n", LeaderBoard[i].meno, 20);
-			fscanf_s(board, "%d\n", &LeaderBoard[i].pocetVyhier);
-			
-			if (LeaderBoard[i].meno == meno)
+			if (board != 0)
 			{
-				found = true;
-				LeaderBoard[i].pocetVyhier = LeaderBoard[i].pocetVyhier + 1;
-				break;
+				fscanf_s(board, "%d\n", &LeaderBoard[i].obsadene);
+				fscanf_s(board, "%s\n", LeaderBoard[i].meno, 20);
+				fscanf_s(board, "%d\n", &LeaderBoard[i].pocetVyhier);
+
+				if (LeaderBoard[i].meno == meno)
+				{
+					found = true;
+					LeaderBoard[i].pocetVyhier = LeaderBoard[i].pocetVyhier + 1;
+					break;
+				}
 			}
-			
 		}
 		fclose(board);
+		
 
 
 		if (found == false)
 		{
-			for (int i = 0; i < 10; i++)
+			for (int i = 0; i < 10; i ++ )
 			{
-				if (strcmp(LeaderBoard[i].meno, " ") == 0)
+				if (LeaderBoard[(i)].obsadene == 0 )
 				{
 					poz = i;
 					break;
 				}
 			}
-			strcpy(LeaderBoard[poz].meno, meno);
-			LeaderBoard[poz].pocetVyhier = LeaderBoard[poz].pocetVyhier + 1;
+			LeaderBoard[poz].obsadene = 1;
+			strcpy_s(LeaderBoard[poz].meno, meno);
+			LeaderBoard[poz].pocetVyhier =  1;
 		}
 		
 
@@ -67,41 +73,57 @@ void addToBoard(leader* LeaderBoard,char* meno)
 		{
 			for (int i = 0; i < poz; i++)
 			{
-				fprintf(board,"%s\n", LeaderBoard[i].meno,20);
-				fprintf(board, "%d\n", LeaderBoard[i].pocetVyhier,10);
+				fprintf(board, "%d\n", LeaderBoard[i].obsadene);
+				fprintf(board,"%s\n", LeaderBoard[i].meno);
+				fprintf(board, "%d\n", LeaderBoard[i].pocetVyhier);
 								
 			}
-			fclose(board);
+			for (int i = (poz+1); i < 10; i++)
+			{
+				fprintf(board, "0\n");
+				fprintf(board, " \n");
+				fprintf(board, " \n");
+
+			}
+			
 		}
+		fclose(board);
 
 	}
 }
 
 void ShowBoard(leader LeaderBoard[10])
 {
+	int poz = 0;
 	FILE* board;
 	fopen_s(&board, "leaderboard.txt", "r");
 	for (int j = 0; j < 10; j++)
 	{
-		fscanf_s(board, "%s\n", LeaderBoard[j].meno,20);
-		fscanf_s(board, "%d\n", &LeaderBoard[j].pocetVyhier,10);
+		fscanf_s(board, "%d\n", &LeaderBoard[j].obsadene);
+		fscanf_s(board, "%s\n", LeaderBoard[j].meno, 20);
+		fscanf_s(board, "%d\n", &LeaderBoard[j].pocetVyhier);
 
 	}
 	fclose(board);
-	
-	
+
 	printf("\n\n");
+
 	for (int i = 0; i < 10; i++)
 	{
-		if (strcmp( LeaderBoard[i].meno, " ") == 0)
+		if (LeaderBoard[(i)].obsadene == 0)
 		{
-			
+			poz = i;
+			break;
 		}
-		else
-		printf("Player: %s, Pocet vyhier: %d\n", LeaderBoard[i].meno, LeaderBoard[i].pocetVyhier);
-
+		
 	}
-	getchar();
+	for (int i = 0; i < poz; i++)
+	{
+		//printf("%d\n", LeaderBoard[i].obsadene);
+		printf("Player: %s, Pocet vyhier: %d\n", LeaderBoard[i].meno, LeaderBoard[i].pocetVyhier);
+	}
+	int c;
+	while ((c = getchar()) != '\n' && c != EOF) {}
 }
 
 
@@ -342,7 +364,7 @@ void jeRemiza(int** P, int velkostX, int velkostY)
 	}
 }
 
-void urobTah(int** hraciaDoska , bool *startPlayer, char* player1, char* player2, int velkostX, int velkostY,int pocetTahov1, int pocetTahov2,leader* LeaderBoard)
+void urobTah(int** hraciaDoska , bool *startPlayer, char* player1, char* player2, int velkostX, int velkostY,int *pocetTahov1, int *pocetTahov2,leader* LeaderBoard)
 {
 	int zadaneX = 2;
 	int zadaneY = 2;
@@ -358,7 +380,7 @@ void urobTah(int** hraciaDoska , bool *startPlayer, char* player1, char* player2
 
 		} while (zadaneX < 1 || zadaneX > velkostX || zadaneY < 1 || zadaneY > velkostY || hraciaDoska[zadaneX + 1][zadaneY + 1 ] == 0 || hraciaDoska[zadaneX + 1][zadaneY + 1] == 1);
 		
-		pocetTahov1++;
+		(*pocetTahov1)++;
 		hraciaDoska[zadaneX + 1][zadaneY + 1] = 0;
 
 		if (winCheck(hraciaDoska, zadaneX, zadaneY, velkostX, velkostY) == true)
@@ -367,7 +389,7 @@ void urobTah(int** hraciaDoska , bool *startPlayer, char* player1, char* player2
 			system("cls");
 			vykreslenieDosky(hraciaDoska, velkostX, velkostY);
 			printf("\n\n\n!!!\tVYHRAL %s\t!!!\n\n", player1);
-			printf("\tPocet tahov: %d\t\n\n\n", pocetTahov1);
+			printf("\tPocet tahov: %d\t\n\n\n", *pocetTahov1);
 			addToBoard(LeaderBoard, player1);
 			vyhra = 1;
 			
@@ -388,7 +410,7 @@ void urobTah(int** hraciaDoska , bool *startPlayer, char* player1, char* player2
 
 		} while (zadaneX < 1 || zadaneX > velkostX || zadaneY < 1 || zadaneY > velkostY || hraciaDoska[zadaneX + 1][zadaneY + 1] == 0 || hraciaDoska[zadaneX + 1][zadaneY + 1] == 1);
 		
-		pocetTahov2++;
+		(*pocetTahov2)++;
 		hraciaDoska[zadaneX + 1][zadaneY + 1] = 1;
 
 		if (winCheck(hraciaDoska, zadaneX, zadaneY, velkostX, velkostY) == true)
@@ -396,7 +418,7 @@ void urobTah(int** hraciaDoska , bool *startPlayer, char* player1, char* player2
 			system("cls");
 			vykreslenieDosky(hraciaDoska, velkostX, velkostY);
 			printf("\n\n\n!!!\tVYHRAL %s\t!!!\n\n", player2);
-			printf("\tPocet tahov: %d\t!!!", pocetTahov2);
+			printf("\tPocet tahov: %d\t!!!", *pocetTahov2);
 			addToBoard(LeaderBoard, player2);
 			vyhra = 1;
 		}else
@@ -507,7 +529,7 @@ int main()
 			do
 			{
 				vykreslenieDosky(hraciaDoska, velkostX, velkostY);
-				urobTah(hraciaDoska, &startPlayer, player1, player2, velkostX, velkostY,pocetTahov1, pocetTahov2, LeaderBoard);			
+				urobTah(hraciaDoska, &startPlayer, player1, player2, velkostX, velkostY,&pocetTahov1, &pocetTahov2, LeaderBoard);			
 
 			} while (vyhra != 1);
 
